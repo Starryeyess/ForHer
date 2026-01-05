@@ -1,0 +1,85 @@
+{% extends "base.html" %} 
+{% block title %}Daily Log{% endblock %} 
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="card shadow-lg border-0" style="border-radius: 15px;">
+        <div class="card-header bg-primary text-white text-center" style="border-radius: 15px 15px 0 0;">
+            <h3>Daily Check-In</h3>
+            <p class="mb-0">Phase: <strong>{{ phase_name }}</strong></p>
+        </div>
+        <div class="card-body p-4">
+            
+            <form method="POST">
+                
+                <h5 class="text-muted mb-3"><i class="fa fa-heartbeat"></i> Physical Symptoms</h5>
+                <div class="option-group">
+                    {% set physical_opts = ['Cramps', 'Headache', 'Breast Tenderness', 'Backache', 'Acne', 'Bloating', 'Nausea'] %}
+                    {% for opt in physical_opts %}
+                        <input type="checkbox" name="physical" value="{{ opt }}" id="phys_{{ loop.index }}" class="d-none">
+                        <label for="phys_{{ loop.index }}" class="btn btn-outline-secondary rounded-pill m-1">{{ opt }}</label>
+                    {% endfor %}
+                </div>
+                <hr>
+
+                <h5 class="text-muted mb-3"><i class="fa fa-tint"></i> Vaginal Discharge</h5>
+                <div class="option-group">
+                    {% set discharge_opts = ['Dry / None', 'Sticky', 'Creamy', 'Egg-white (Fertile)', 'Watery', 'Unusual (Grey/Green)'] %}
+                    {% for opt in discharge_opts %}
+                        <input type="radio" name="discharge" value="{{ opt }}" id="dis_{{ loop.index }}" class="d-none">
+                        <label for="dis_{{ loop.index }}" class="btn btn-outline-info rounded-pill m-1">{{ opt }}</label>
+                    {% endfor %}
+                </div>
+                <hr>
+
+                <h5 class="text-muted mb-3"><i class="fa fa-smile-o"></i> Mood</h5>
+                <div class="option-group">
+                    {% set mood_opts = ['Happy', 'Energetic', 'Sad', 'Anxious', 'Irritable', 'Brain Fog', 'Mood Swings'] %}
+                    {% for opt in mood_opts %}
+                        <input type="checkbox" name="mood" value="{{ opt }}" id="mood_{{ loop.index }}" class="d-none">
+                        <label for="mood_{{ loop.index }}" class="btn btn-outline-warning rounded-pill m-1">{{ opt }}</label>
+                    {% endfor %}
+                </div>
+                <hr>
+
+                <h5 class="text-muted mb-3"><i class="fa fa-cutlery"></i> Digestion & Cravings</h5>
+                <div class="option-group">
+                    {% set dig_opts = ['Normal', 'Constipation', 'Diarrhea', 'Gas', 'Cravings: Sweets', 'Cravings: Salty'] %}
+                    {% for opt in dig_opts %}
+                        <input type="checkbox" name="digestion" value="{{ opt }}" id="dig_{{ loop.index }}" class="d-none">
+                        <label for="dig_{{ loop.index }}" class="btn btn-outline-success rounded-pill m-1">{{ opt }}</label>
+                    {% endfor %}
+                </div>
+
+                {% if phase_name == 'Menstrual' %}
+                <hr>
+                <div class="alert alert-danger">
+                    <h5 class="mb-3"><i class="fa fa-female"></i> Menstrual Flow</h5>
+                    <div class="option-group">
+                        {% set flow_opts = ['Spotting', 'Light', 'Medium', 'Heavy', 'Super Heavy'] %}
+                        {% for opt in flow_opts %}
+                            <input type="radio" name="flow" value="{{ opt }}" id="flow_{{ loop.index }}" class="d-none">
+                            <label for="flow_{{ loop.index }}" class="btn btn-outline-danger rounded-pill m-1">{{ opt }}</label>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <button type="submit" class="btn btn-primary btn-block btn-lg mt-4" style="border-radius: 30px;">Save Log</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    /* When the hidden Checkbox/Radio is CHECKED, style the Label next to it */
+    input[type="checkbox"]:checked + label,
+    input[type="radio"]:checked + label {
+        background-color: #ff6b6b !important;
+        color: white !important;
+        border-color: #ff6b6b !important;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %}

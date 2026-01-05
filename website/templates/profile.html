@@ -1,0 +1,85 @@
+{% extends "base.html" %} 
+{% block title %}ForHer - Profile{% endblock %} 
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="card" style="background-color: rgba(255,255,255,0.05); color: inherit; border: 1px solid rgba(255,255,255,0.1);">
+        <div class="card-header">
+            <h3>My Health Profile</h3>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                
+                <h5 class="text-primary mt-2">A. Identity</h5>
+                <hr style="background-color: gray;">
+                <div class="form-group">
+                    <label>Name / Nickname</label>
+                    <input type="text" class="form-control" value="{{ user.first_name }}" readonly>
+                    <small class="text-muted">Managed in account settings</small>
+                </div>
+                <div class="form-group">
+                    <label>Date of Birth</label>
+                    <input type="date" name="dob" class="form-control" value="{{ user.dob }}">
+                </div>
+
+                <h5 class="text-primary mt-4">B. Cycle Baseline</h5>
+                <hr style="background-color: gray;">
+                <div class="form-row">
+                    <div class="col">
+                        <label>Avg Cycle Length (Days)</label>
+                        <input type="number" name="avg_cycle_length" class="form-control" value="{{ user.avg_cycle_length }}">
+                    </div>
+                    <div class="col">
+                        <label>Avg Period Length (Days)</label>
+                        <input type="number" name="avg_period_length" class="form-control" value="{{ user.avg_period_length }}">
+                    </div>
+                </div>
+                <div class="form-group mt-2">
+                    <label>Luteal Phase Length (Default: 14)</label>
+                    <input type="number" name="luteal_phase_length" class="form-control" value="{{ user.luteal_phase_length }}">
+                </div>
+
+                <h5 class="text-primary mt-4">C. Mode Selection</h5>
+                <hr style="background-color: gray;">
+                <div class="form-group">
+                    <label>Current Goal</label>
+                    <select name="tracking_mode" class="form-control">
+                        <option value="Track Period" {% if user.tracking_mode == 'Track Period' %}selected{% endif %}>Track Period (Prediction Focus)</option>
+                        <option value="TTC" {% if user.tracking_mode == 'TTC' %}selected{% endif %}>Try to Conceive (Fertility Focus)</option>
+                        <option value="Pregnancy" {% if user.tracking_mode == 'Pregnancy' %}selected{% endif %}>Pregnancy (Pause Cycles)</option>
+                    </select>
+                </div>
+
+                <h5 class="text-primary mt-4">D. Health Context</h5>
+                <hr style="background-color: gray;">
+                <div class="form-group">
+                    <label>Contraception Method</label>
+                    <select name="contraception_method" class="form-control">
+                        <option value="None" {% if user.contraception_method == 'None' %}selected{% endif %}>None / Natural</option>
+                        <option value="Pill" {% if user.contraception_method == 'Pill' %}selected{% endif %}>The Pill (Suppresses Ovulation)</option>
+                        <option value="IUD" {% if user.contraception_method == 'IUD' %}selected{% endif %}>IUD</option>
+                        <option value="Other" {% if user.contraception_method == 'Other' %}selected{% endif %}>Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Conditions (Select all that apply)</label><br>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="conditions" value="PCOS" {% if 'PCOS' in user.health_conditions %}checked{% endif %}>
+                        <label class="form-check-label">PCOS</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="conditions" value="Endometriosis" {% if 'Endometriosis' in user.health_conditions %}checked{% endif %}>
+                        <label class="form-check-label">Endometriosis</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="conditions" value="Thyroid" {% if 'Thyroid' in user.health_conditions %}checked{% endif %}>
+                        <label class="form-check-label">Thyroid Issues</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block mt-4">Save Profile</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

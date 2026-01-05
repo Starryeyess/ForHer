@@ -1,0 +1,81 @@
+{% extends "base.html" %} 
+{% block title %}ForHer - Recipes{% endblock %} 
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    
+    <div class="text-center mb-5">
+        <h2>{{ phase_name }} Nutrition</h2>
+        <p class="text-muted">Fuel your body for the current cycle phase.</p>
+    </div>
+
+    <div class="row">
+        {% for recipe in recipes %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100" style="border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden;">
+                
+                {% if recipe.image %}
+                <img src="{{ recipe.image.url() }}" class="card-img-top" alt="{{ recipe.title }}" style="height: 200px; object-fit: cover;">
+                {% else %}
+                <div style="height: 200px; background-color: #eee; display: flex; align-items: center; justify-content: center;">
+                    <i class="fa fa-cutlery fa-3x text-muted"></i>
+                </div>
+                {% endif %}
+
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge badge-success">{{ recipe.prep_time | default('15 mins') }}</span>
+                        <small class="text-muted">{{ recipe.calories | default('---') }} kcal</small>
+                    </div>
+                    
+                    <h5 class="card-title">{{ recipe.title }}</h5>
+                    
+                    <button type="button" class="btn btn-primary btn-block mt-3" data-toggle="modal" data-target="#recipe-modal-{{ loop.index }}">
+                        View Recipe
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="recipe-modal-{{ loop.index }}" tabindex="-1" role="dialog" style="color: #333;">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ recipe.title }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-5">
+                                {% if recipe.image %}
+                                <img src="{{ recipe.image.url() }}" class="img-fluid rounded mb-3">
+                                {% endif %}
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item"><strong>⏱ Prep:</strong> {{ recipe.prep_time }}</li>
+                                    <li class="list-group-item"><strong>🔥 Calories:</strong> {{ recipe.calories }}</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="col-md-7">
+                                <h5>🥗 Ingredients</h5>
+                                <p style="white-space: pre-wrap;">{{ recipe.ingredients }}</p>
+                                <hr>
+                                <h5>👩‍🍳 Instructions</h5>
+                                <p style="white-space: pre-wrap;">{{ recipe.instructions }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12 text-center mt-5">
+            <h3 class="text-muted">No recipes found for {{ phase_name }} phase yet.</h3>
+            <p>Add some content in Contentful!</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
