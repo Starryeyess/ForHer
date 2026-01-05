@@ -1,0 +1,253 @@
+{% extends "base.html" %} 
+{% block title %}ForHer - Home{% endblock %} 
+
+{% block content %}
+<div id="animation-container"></div>
+<div class="container mt-4">
+
+    {% if alerts %}
+    <div class="mb-4">
+        {% for alert in alerts %}
+        <div class="alert {% if alert.type == 'warning' %}alert-warning{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert" style="border-left: 5px solid {% if alert.type == 'warning' %}#ffc107{% else %}#17a2b8{% endif %};">
+            <h5 class="alert-heading">
+                <i class="fa {% if alert.type == 'warning' %}fa-exclamation-triangle{% else %}fa-info-circle{% endif %}"></i> 
+                {{ alert.title }}
+            </h5>
+            <p class="mb-0">{{ alert.desc }}</p>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+<div style="background: {{ phase.bg_color }}; min-height: 100vh; padding: 20px; border-radius: 10px; color: {{ phase.text_color }};">
+    
+    <div class="container">
+        <div class="jumbotron mt-3 text-center" style="background-color: {{ phase.card_color }}; color: inherit;">
+            <h1 class="display-4">Next Period in: {{ days_left }}</h1>
+            <hr class="my-4" style="border-color: {{ phase.text_color }};">
+            
+            <h3><strong>{{ phase.name }} Phase</strong></h3>
+            <h5 class="font-italic">"{{ phase.metaphor }}"</h5>
+            <br />
+            <p class="lead">Primary Feeling: <strong>{{ phase.feeling }}</strong></p>
+            
+        </div>
+
+        <div class="row justify-content-center mb-4">
+            <div class="col-auto">
+                <a href="/daily-log" class="btn btn-outline-primary shadow-sm mr-2" style="border-radius: 30px;">
+                    <i class="fa fa-plus-circle"></i> Log Today's Symptoms
+                </a>
+            </div>
+            <div class="col-auto">
+                <a href="/export-report" class="btn btn-outline-info shadow-sm" style="border-radius: 30px;">
+                    <i class="fa fa-file-pdf-o"></i> Generate Report
+                </a>
+            </div>
+        </div>
+        
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card h-100" style="background-color: {{ phase.card_color }}; color: inherit; border: 1px solid rgba(255,255,255,0.2);">
+                    <div class="card-body text-center d-flex flex-column">
+                        <h5>🎮 Game Style</h5>
+                        <p class="card-text font-weight-bold mb-3">{{ phase.game_style }}</p>
+                        
+                        <div class="mt-auto">
+                            {% if phase.name == 'Menstrual' %}
+                                <a href="/game/coloring" class="btn btn-sm btn-light">Open Zen Zone</a>
+                            {% elif phase.name == 'Follicular' %}
+                                <a href="/game/sudoku" class="btn btn-sm btn-light">Start Brain Gym</a>
+                            {% elif phase.name == 'Ovulation' %}
+                                <a href="/game/trivia" class="btn btn-sm btn-light">Play Social Trivia</a>
+                            {% elif phase.name == 'Luteal' %}
+                                <a href="/game/tetris" class="btn btn-sm btn-light">Organize (Tetris)</a>
+                            {% else %}
+                                <button class="btn btn-sm btn-secondary" disabled>No Game Available</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100" style="background-color: {{ phase.card_color }}; color: inherit; border: 1px solid rgba(255,255,255,0.2);">
+                    <div class="card-body text-center d-flex flex-column">
+                        <h5>🍲 Recipe Vibe</h5>
+                        <p class="card-text font-weight-bold mb-3">{{ phase.recipe_vibe }}</p>
+                        
+                        <div class="mt-auto">
+                            <a href="/recipes?phase={{ phase.name }}" class="btn btn-sm btn-light">
+                                View {{ phase.name }} Recipes
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100" style="background-color: {{ phase.card_color }}; color: inherit; border: 1px solid rgba(255,255,255,0.2);">
+                    <div class="card-body text-center d-flex flex-column">
+                        <h5>🧘 Wellness</h5>
+                        <p class="card-text font-weight-bold mb-3">{{ phase.wellness_feature }}</p>
+                        
+                        <div class="mt-auto">
+                            <a href="/wellness?phase={{ phase.name }}" class="btn btn-sm btn-light">
+                                <i class="fa fa-play-circle"></i> Start Session
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                
+                <div class="card mb-4" style="background-color: {{ phase.card_color }}; color: inherit;">
+                    <div class="card-body">
+                        <h4 class="card-title text-center">Log Period</h4>
+                        <form method="POST" action="{{ url_for('views.dashboard') }}">
+                            <div class="form-group">
+                                <label>Start Date</label>
+                                <input type="date" name="start_date" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Duration (Days)</label>
+                                <input type="number" name="duration" class="form-control" value="5" min="1" max="15">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Save</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card mb-4" style="background-color: {{ phase.card_color }}; color: inherit; border: 1px solid rgba(255,255,255,0.2);">
+                    <div class="card-header" data-toggle="collapse" data-target="#historyLog" style="cursor: pointer; border-bottom: 1px solid rgba(0,0,0,0.1);">
+                        <h5 class="mb-0">📜 History (Expand)</h5>
+                    </div>
+                    <div id="historyLog" class="collapse">
+                        <div class="card-body p-0">
+                            <table class="table table-hover mb-0" style="color: inherit;">
+                                <thead>
+                                    <tr>
+                                        <th style="border-top: none;">Date</th>
+                                        <th style="border-top: none;">Days</th>
+                                        <th style="border-top: none;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for period in user.periods|sort(attribute='start_date', reverse=True) %}
+                                    <tr>
+                                        <td>{{ period.start_date.strftime('%Y-%m-%d') }}</td>
+                                        <td>{{ period.duration }}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-danger py-0" onclick="deletePeriod({{ period.id }})">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <div class="col-md-8">
+                <div class="card" style="background-color: rgba(255,255,255,0.95); color: black;">
+                    <div class="card-body">
+                        <div id='calendar'></div>
+                    </div>
+                </div>
+            </div> </div>
+    </div>
+</div>
+
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendarEvents = {{ events | tojson }};
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth'
+      },
+      events: calendarEvents,
+      height: 400 
+    });
+    calendar.render();
+  });
+
+  function deletePeriod(periodId) {
+    if (confirm("Are you sure you want to delete this log?")) {
+        fetch("/delete-period", {
+            method: "POST",
+            body: JSON.stringify({ periodId: periodId }),
+            headers: {
+                'Content-Type': 'application/json' // Crucial for Flask to read the data
+            }
+        }).then((_res) => {
+            window.location.href = "/"; // Refresh page to see changes
+        });
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+      const season = "{{ phase.metaphor }}"; 
+      const container = document.getElementById('animation-container');
+
+      // 1. GENERATE PARTICLES BASED ON PHASE
+      if (season === 'Winter') {
+          createParticles('snowflake', 50);
+      } else if (season === 'Autumn') {
+          createParticles('leaf', 30);
+      } else if (season === 'Spring') {
+          createParticles('petal', 40);
+      } else if (season === 'Summer') {
+          // Changed to visible particles instead of background glow
+          createParticles('sun-particle', 40);
+      }
+
+      function createParticles(className, count) {
+          for (let i = 0; i < count; i++) {
+              const el = document.createElement('div');
+              el.classList.add(className);
+              
+              // Random positioning
+              el.style.left = Math.random() * 100 + 'vw';
+              
+              // Randomize size slightly
+              let size = Math.random() * 8 + 4 + 'px'; // Default size
+              if (className === 'snowflake') size = Math.random() * 5 + 2 + 'px';
+              if (className === 'sun-particle') size = Math.random() * 6 + 3 + 'px';
+              
+              el.style.width = size;
+              el.style.height = size;
+
+              // Randomize speed (faster for summer/spring energy)
+              el.style.animationDuration = (Math.random() * 5 + 5) + 's'; 
+              el.style.animationDelay = (Math.random() * 5) + 's';       
+              
+              container.appendChild(el);
+          }
+      }
+
+      // 2. STOP ANIMATION AFTER 5 SECONDS
+      setTimeout(() => {
+          // Fade out effect
+          container.style.transition = "opacity 1s ease";
+          container.style.opacity = 0;
+          
+          // Remove from DOM after fade is complete
+          setTimeout(() => {
+              container.innerHTML = ''; 
+          }, 1000);
+      }, 5000); // 5000ms = 5 seconds
+  });
+</script>
+
+{% endblock %}
