@@ -15,17 +15,21 @@ from reportlab.lib import colors
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-
+import os
 
 from sklearn.linear_model import LinearRegression
 
 views = Blueprint('views', __name__)
 
-SPACE_ID = '7gp0ev7qw97z'
-DELIVERY_API_TOKEN = 'QPztP1jwq5DmvZJ4EI0rp75hMXaWFPmRSZXKOoSJh28'
+from dotenv import load_dotenv
 
 
-client = contentful.Client(SPACE_ID, DELIVERY_API_TOKEN, timeout_s=10)
+load_dotenv()
+
+
+
+
+client = contentful.Client(os.getenv("SPACE_ID"), os.getenv("DELIVERY_API_TOKEN"), timeout_s=10)
 
 
 
